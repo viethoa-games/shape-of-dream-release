@@ -28,6 +28,8 @@
 
 ## Nội dung đã Việt hóa (100%)
 
+> Tất cả hạng mục đều dịch đủ **100%** — không thiếu chuỗi nào.
+
 | Hạng mục | Số lượng |
 |---|---:|
 | Chuỗi giao diện (UI) | 3.177 |
@@ -38,7 +40,7 @@
 | Lời Nguyền (Curse) | 23 |
 | Bảo Vật (Treasure) | 22 |
 | Cổ Vật (Artifact) | 19 |
-| Hội thoại | 127 đoạn / 315 dòng |
+| Hội thoại | 127 hội thoại, gồm 315 dòng — dịch đủ 315/315 |
 | Truyện Lữ Khách | 169 đoạn dài |
 
 **Phiên bản** hiển thị trong **mô tả mod** (dòng `Phiên bản: vX.Y.Z`) — mod tự

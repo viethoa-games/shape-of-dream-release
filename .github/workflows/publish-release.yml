@@ -1,0 +1,64 @@
+name: Publish Release
+
+# Creates a GitHub Release automatically when a localization zip is pushed
+# into releases/. The release tag is vi-VN-<version> extracted from the file
+# name (e.g. ShapeOfDreams_VI_vi-VN-1.0.1.zip -> vi-VN-1.0.1).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'releases/*.zip'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release from releases/ (e.g. 1.0.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Find zip(s)
+        id: find
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            ZIPS="releases/ShapeOfDreams_VI_vi-VN-${{ inputs.version }}.zip"
+          else
+            ZIPS=$(git diff --name-only HEAD^ HEAD -- 'releases/*.zip' || true)
+          fi
+          echo "zips<<EOF" >> $GITHUB_OUTPUT
+          echo "$ZIPS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create releases
+        if: steps.find.outputs.zips != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          echo "${{ steps.find.outputs.zips }}" | while read -r z; do
+            [ -z "$z" ] && continue
+            [ -f "$z" ] || continue
+            base=$(basename "$z")
+            ver=$(echo "$base" | sed -n 's/.*vi-VN-\(.*\)\.zip/\1/p')
+            if [ -z "$ver" ]; then echo "skip (no version): $base"; continue; fi
+            if gh release view "vi-VN-$ver" --repo "${{ github.repository }}" >/dev/null 2>&1; then
+              echo "release vi-VN-$ver exists - uploading asset"
+              gh release upload "vi-VN-$ver" "$z" --repo "${{ github.repository }}" --clobber
+            else
+              gh release create "vi-VN-$ver" "$z" \
+                --repo "${{ github.repository }}" \
+                --title "Tiếng Việt v$ver" \
+                --notes "Bản Việt hóa Shape of Dreams — Tiếng Việt v$ver.\nXem README để biết cách cài đặt. Việt hóa bởi Tấn Nguyễn — tannguyenvnkg@gmail.com"
+            fi
+          done

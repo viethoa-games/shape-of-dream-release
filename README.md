@@ -50,6 +50,7 @@ Xem tab [Releases](https://github.com/viethoa-games/shape-of-dream-release/relea
 
 | Version | Ghi chú |
 |---|---|
+| `1.0.1` | Vòng review văn phong: 95 findings + chốt 7 thuật ngữ; QA 0 lỗi; đã test in-game |
 | `1.0.0` | Bản đầy đủ đầu tiên — dịch 100% nội dung, QA 0 lỗi |
 
 ## Báo lỗi & đóng góp
